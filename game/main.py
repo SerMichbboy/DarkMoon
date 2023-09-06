@@ -1,5 +1,5 @@
 from settings import Settings
-from general import draw_text
+from general import draw_text, are_you_sure
 from Play_game import game
 import pygame
 import sys
@@ -8,12 +8,12 @@ import sys
 
 pygame.init()
 pygame.mixer.init()
-
 screen = pygame.display.set_mode((Settings.width, Settings.height))
 pygame.display.set_caption("Dark Moon")
 clock = pygame.time.Clock()
-font = pygame.font.SysFont('Georgia', Settings.text_size)
 click = False
+font = pygame.font.SysFont(Settings.text_style, Settings.text_size)
+
 
 # _________________________________________________________________________________________
 def options():
@@ -28,41 +28,6 @@ def options():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
-        pygame.display.update()
-        clock.tick(60)
-
-
-def are_you_sure():
-    global click
-    running = True
-    draw_text('Are you sure', font, Settings.WHITE, screen, 460, 420)
-    button_yes = pygame.Rect(465, 450, 40, 30)
-    button_no = pygame.Rect(525, 450, 40, 30)
-    draw_text('Yes', font, Settings.WHITE, screen, 470, 455)
-    draw_text('No', font, Settings.WHITE, screen, 532, 455)
-    while running:
-        mx, my = pygame.mouse.get_pos()
-        if button_yes.collidepoint((mx, my)):
-            if click:
-                pygame.quit()
-                exit()
-        if button_no.collidepoint((mx, my)):
-            if click:
-                break
-
-        click = False
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    pygame.mixer.Sound('sounds/10e1076dfd6c701.ogg').play()
-                    click = True
-
         pygame.display.update()
         clock.tick(60)
 
@@ -84,7 +49,6 @@ def main_menu():
         if x >= Settings.width:
             speed = -speed
         screen.blit(animation_mist, (x, y))
-
         pygame.transform.scale(background_menu_image, (1024, 768))
 
         mx, my = pygame.mouse.get_pos()
@@ -103,7 +67,7 @@ def main_menu():
                 options()
         elif exit_button.collidepoint((mx, my)):
             if click:
-                are_you_sure()
+                are_you_sure(screen, clock)
 
         draw_text('Main Menu', pygame.font.SysFont('Georgia', 13), Settings.WHITE, screen, 263, 425)
         draw_text('PLAY', font, Settings.WHITE, screen, 270, 455)
@@ -118,8 +82,7 @@ def main_menu():
                 exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    exit()
+                    are_you_sure(screen, clock)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     pygame.mixer.Sound('sounds/10e1076dfd6c701.ogg').play()
