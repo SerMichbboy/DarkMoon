@@ -104,7 +104,9 @@ def main_menu():
 
         if button_1.collidepoint((mx, my)):
             if click:
+                pygame.quit()
                 game()
+
         elif button_2.collidepoint((mx, my)):
             if click:
                 options()
