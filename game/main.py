@@ -1,3 +1,5 @@
+from settings import Settings
+from general import draw_text
 from Play_game import game
 import pygame
 import sys
@@ -6,28 +8,17 @@ import sys
 
 pygame.init()
 pygame.mixer.init()
-width = 1024
-height = 768
-screen = pygame.display.set_mode((width, height))
+
+screen = pygame.display.set_mode((Settings.width, Settings.height))
 pygame.display.set_caption("Dark Moon")
 clock = pygame.time.Clock()
-font = pygame.font.SysFont('Georgia', 20)
+font = pygame.font.SysFont('Georgia', Settings.text_size)
 click = False
 
-
-# __________________________________________________________________________________________
-
-
-def draw_text(text, _font, color, surface, x, y):
-    textobj = _font.render(text, 1, color)
-    textrect = textobj.get_rect()
-    textrect.topleft = (x, y)
-    surface.blit(textobj, textrect)
-
-
+# _________________________________________________________________________________________
 def options():
     running = True
-    draw_text('OPTIONS SCREEN', font, (255, 255, 255), screen, 20, 20)
+    draw_text('OPTIONS SCREEN', font, Settings.WHITE, screen, 20, 20)
     while running:
         mx, my = pygame.mouse.get_pos()
         for event in pygame.event.get():
@@ -44,11 +35,11 @@ def options():
 def are_you_sure():
     global click
     running = True
-    draw_text('Are you sure', font, (255, 255, 255), screen, 460, 420)
+    draw_text('Are you sure', font, Settings.WHITE, screen, 460, 420)
     button_yes = pygame.Rect(465, 450, 40, 30)
     button_no = pygame.Rect(525, 450, 40, 30)
-    draw_text('Yes', font, (255, 255, 255), screen, 470, 455)
-    draw_text('No', font, (255, 255, 255), screen, 532, 455)
+    draw_text('Yes', font, Settings.WHITE, screen, 470, 455)
+    draw_text('No', font, Settings.WHITE, screen, 532, 455)
     while running:
         mx, my = pygame.mouse.get_pos()
         if button_yes.collidepoint((mx, my)):
@@ -90,7 +81,7 @@ def main_menu():
         screen.blit(background_menu_image, (0, 0))
 
         x += speed
-        if x >= width:
+        if x >= Settings.width:
             speed = -speed
         screen.blit(animation_mist, (x, y))
 
@@ -98,26 +89,26 @@ def main_menu():
 
         mx, my = pygame.mouse.get_pos()
 
-        button_1 = pygame.Rect(190, 450, 200, 30)
-        button_2 = pygame.Rect(190, 490, 200, 30)
-        button_3 = pygame.Rect(190, 530, 200, 30)
+        start_button = pygame.Rect(190, 450, 200, 30)
+        settings_button = pygame.Rect(190, 490, 200, 30)
+        exit_button = pygame.Rect(190, 530, 200, 30)
 
-        if button_1.collidepoint((mx, my)):
+        if start_button.collidepoint((mx, my)):
             if click:
                 pygame.quit()
                 game()
 
-        elif button_2.collidepoint((mx, my)):
+        elif settings_button.collidepoint((mx, my)):
             if click:
                 options()
-        elif button_3.collidepoint((mx, my)):
+        elif exit_button.collidepoint((mx, my)):
             if click:
                 are_you_sure()
 
-        draw_text('Main Menu', pygame.font.SysFont('Georgia', 13), (250, 250, 250), screen, 263, 425)
-        draw_text('PLAY', font, (255, 255, 255), screen, 270, 455)
-        draw_text('OPTIONS', font, (255, 255, 255), screen, 250, 495)
-        draw_text('EXIT', font, (255, 255, 255), screen, 270, 535)
+        draw_text('Main Menu', pygame.font.SysFont('Georgia', 13), Settings.WHITE, screen, 263, 425)
+        draw_text('PLAY', font, Settings.WHITE, screen, 270, 455)
+        draw_text('OPTIONS', font, Settings.WHITE, screen, 250, 495)
+        draw_text('EXIT', font, Settings.WHITE, screen, 270, 535)
 
         click = False
 
