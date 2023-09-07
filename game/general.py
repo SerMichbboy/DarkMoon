@@ -10,25 +10,28 @@ def draw_text(text, _font, color, surface, x, y):
     surface.blit(textobj, textrect)
 
 
-def are_you_sure(screen, clock):
+def are_you_sure(screen, clock, from_game=False):
     click = False
     font = pygame.font.SysFont(Settings.text_style, Settings.text_size)
     running = True
-    draw_text('Are you sure', font, Settings.WHITE, screen, 460, 420)
-    button_yes = pygame.Rect(465, 450, 40, 30)
-    button_no = pygame.Rect(525, 450, 40, 30)
-    draw_text('Yes', font, Settings.WHITE, screen, 470, 455)
-    draw_text('No', font, Settings.WHITE, screen, 532, 455)
+    if from_game:
+        x, y = Settings.width_game // 2, Settings.height_game // 2
+    else:
+        x, y = Settings.menu_width // 2, Settings.menu_height // 2
+    draw_text('Are you sure', font, Settings.WHITE, screen, x, y)
+    button_yes = pygame.Rect(x + 10, y + 35, 40, 30)
+    button_no = pygame.Rect(x + 62, y + 35, 40, 30)
+    draw_text('Yes', font, Settings.WHITE, screen, x + 10, y + 35)
+    draw_text('No', font, Settings.WHITE, screen, x + 62, y + 35)
     while running:
         mx, my = pygame.mouse.get_pos()
         if button_yes.collidepoint((mx, my)):
             if click:
                 pygame.quit()
-                exit()
+                return True
         if button_no.collidepoint((mx, my)):
             if click:
-                break
-
+                return False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -43,4 +46,5 @@ def are_you_sure(screen, clock):
 
         pygame.display.update()
         clock.tick(60)
+
 

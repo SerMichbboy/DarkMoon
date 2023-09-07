@@ -6,17 +6,20 @@ import sys
 
 # __________________________________________________________________________________________
 
-pygame.init()
-pygame.mixer.init()
-screen = pygame.display.set_mode((Settings.width, Settings.height))
-pygame.display.set_caption("Dark Moon")
-clock = pygame.time.Clock()
-click = False
-font = pygame.font.SysFont(Settings.text_style, Settings.text_size)
+
+def pygame_init():
+    pygame.init()
+    pygame.mixer.init()
+    screen = pygame.display.set_mode((Settings.menu_width, Settings.menu_height))
+    pygame.display.set_caption("Dark Moon")
+    clock = pygame.time.Clock()
+    click = False
+    font = pygame.font.SysFont(Settings.text_style, Settings.text_size)
+    return screen, clock, click, font
 
 
 # _________________________________________________________________________________________
-def options():
+def options(font, screen, clock):
     running = True
     draw_text('OPTIONS SCREEN', font, Settings.WHITE, screen, 20, 20)
     while running:
@@ -33,7 +36,7 @@ def options():
 
 
 def main_menu():
-    global click
+    screen, clock, click, font = pygame_init()
     pygame.mixer.music.load('sounds/a5bf579ed23da4d.ogg')
     pygame.mixer.music.play()
     animation_mist = pygame.image.load('images/Frames/pngegg.png')
@@ -46,7 +49,7 @@ def main_menu():
         screen.blit(background_menu_image, (0, 0))
 
         x += speed
-        if x >= Settings.width:
+        if x >= Settings.menu_width:
             speed = -speed
         screen.blit(animation_mist, (x, y))
         pygame.transform.scale(background_menu_image, (1024, 768))
@@ -61,10 +64,11 @@ def main_menu():
             if click:
                 pygame.quit()
                 game()
+                break
 
         elif settings_button.collidepoint((mx, my)):
             if click:
-                options()
+                options(font, screen, clock)
         elif exit_button.collidepoint((mx, my)):
             if click:
                 are_you_sure(screen, clock)
@@ -94,4 +98,5 @@ def main_menu():
         clock.tick(60)
 
 
-main_menu()
+while True:
+    main_menu()

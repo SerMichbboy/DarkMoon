@@ -4,8 +4,10 @@ import pygame
 
 @dataclass
 class Settings:
-    width: int = 1024
-    height: int = 768
+    menu_width: int = 1024
+    menu_height: int = 768
+    width_game: int = 1920
+    height_game: int = 1080
     text_size: int = 20
     text_style: str = 'Georgia'
     FPS: int = 60
