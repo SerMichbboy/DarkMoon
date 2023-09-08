@@ -15,11 +15,33 @@ def game():
 
     # player
     # ============================================================================
-    player = pygame.image.load('images/Frames/bird/pngwing.com (1) (1).png')
+
+    player_go_right = [pygame.image.load(f'images/Frames/main_chr/run1.png'),
+                       pygame.image.load(f'images/Frames/main_chr/run2.png'),
+                       pygame.image.load(f'images/Frames/main_chr/run3.png'),
+                       pygame.image.load(f'images/Frames/main_chr/run4.png'),
+                       pygame.image.load(f'images/Frames/main_chr/run5.png'),
+                       pygame.image.load(f'images/Frames/main_chr/run6.png')
+                       ]
+
+    player_go_left = [pygame.image.load(f'images/Frames/main_chr_left/run1left.png'),
+                      pygame.image.load(f'images/Frames/main_chr_left/run2left.png'),
+                      pygame.image.load(f'images/Frames/main_chr_left/run3left.png'),
+                      pygame.image.load(f'images/Frames/main_chr_left/run4left.png'),
+                      pygame.image.load(f'images/Frames/main_chr_left/run5left.png'),
+                      pygame.image.load(f'images/Frames/main_chr_left/run6left.png')
+                      ]
+
+    player_jump_right = [pygame.image.load('images/Frames/main_chr_jump/jump1.png'),
+                         pygame.image.load('images/Frames/main_chr_jump/jump2.png')]
+
+    player_jump_left = [pygame.image.load('images/Frames/main_chr_jump_left/jump1left.png'),
+                        pygame.image.load('images/Frames/main_chr_jump_left/jump2left.png')]
+
     character_speed, character_x, character_y = 15, 300, 600
     is_jump = False
     jump_count = 9
-    playe_anim_count = 0
+    player_anim_count = 0
 
     # ============================================================================
 
@@ -30,31 +52,53 @@ def game():
         level_pick = pygame.image.load('images/99px_ru_wallpaper_349262_mrachnij_temnij_les.jpg')
         screen.blit(level_pick, (bg_x, -1150))
         screen.blit(level_pick, (bg_x + 3840, -1150))
-        screen.blit(player, (character_x, character_y))
+        keys = pygame.key.get_pressed()
+
+        def player(arg):
+            return screen.blit(arg[player_anim_count], (character_x, character_y))
 
         # Moving
         # =========================================================
 
-        keys = pygame.key.get_pressed()
+        # Go left
+        if keys[pygame.K_a]:
+            if jump_count == 9:
+                player(player_go_left)
+            player_anim_count += 1
+            bg_x += character_speed
+            if player_anim_count >= 5:
+                player_anim_count = 0
 
-        if keys[pygame.K_a] and character_x > 20:
-            if bg_x < 0:
-                if bg_x > 1000:
-                    character_x -= character_speed
-                bg_x += character_speed
-            character_x -= character_speed
-        if keys[pygame.K_d] and bg_x > -800:
-            if character_x < 250:
-                character_x += character_speed
-            bg_x -= character_speed
+        # Go right
+        elif keys[pygame.K_d]:
+            if jump_count == 9:
+                player(player_go_right)
+            if is_jump != 9:
+                player_anim_count += 1
+                bg_x -= character_speed
+            if player_anim_count >= 5:
+                player_anim_count = 0
+
+        elif not keys[pygame.K_SPACE] and is_jump == 9:
+            screen.blit(player_go_right[1], (character_x, character_y))
+
+        # Jumping
         if not is_jump:
             if keys[pygame.K_SPACE]:
                 is_jump = True
-        else:
+        elif is_jump:
             if jump_count >= -9:
                 if jump_count > 0:
+                    if keys[pygame.K_a]:
+                        screen.blit(player_jump_left[0], (character_x, character_y))
+                    elif keys[pygame.K_d]:
+                        screen.blit(player_jump_right[0], (character_x, character_y))
                     character_y -= (jump_count ** 2) / 2
                 else:
+                    if keys[pygame.K_a]:
+                        screen.blit(player_jump_left[1], (character_x, character_y))
+                    elif keys[pygame.K_d]:
+                        screen.blit(player_jump_right[1], (character_x, character_y))
                     character_y += (jump_count ** 2) / 2
                 jump_count -= 1
             else:
@@ -77,6 +121,6 @@ def game():
 
         pygame.display.flip()
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(30)
 
 # -----------------------------------------------------------------------------------------------------

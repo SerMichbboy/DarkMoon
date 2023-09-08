@@ -4,8 +4,8 @@ from Play_game import game
 import pygame
 import sys
 
-# __________________________________________________________________________________________
 
+# __________________________________________________________________________________________
 
 def pygame_init():
     pygame.init()
@@ -16,9 +16,9 @@ def pygame_init():
     click = False
     font = pygame.font.SysFont(Settings.text_style, Settings.text_size)
     return screen, clock, click, font
-
-
 # _________________________________________________________________________________________
+
+
 def options(font, screen, clock):
     running = True
     draw_text('OPTIONS SCREEN', font, Settings.WHITE, screen, 20, 20)
