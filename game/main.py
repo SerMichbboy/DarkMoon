@@ -92,7 +92,6 @@ def main_menu():
                     pygame.mixer.Sound('sounds/10e1076dfd6c701.ogg').play()
                     click = True
 
-        screen.blit(animation_mist, (x, y))
         pygame.display.flip()
         pygame.display.update()
         clock.tick(60)
