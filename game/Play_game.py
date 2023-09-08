@@ -7,11 +7,15 @@ def game():
     pygame.init()
     pygame.mixer.init()
     pygame.display.set_caption("Dark Moon")
-    clock = pygame.time.Clock()
-    screen = pygame.display.set_mode((Settings.width_game, Settings.height_game))
 
+    clock = pygame.time.Clock()
+    screen = pygame.display.set_mode((Settings.width_game, Settings.height_game), pygame.FULLSCREEN)
     # Start coordinate
     bg_x = 0
+
+    # Sounds
+    pygame.mixer.music.load('sounds/music/kevin-macleod-ghost-story.ogg')
+    pygame.mixer.music.play()
 
     # player
     # ============================================================================
@@ -50,8 +54,8 @@ def game():
     while True:
         mx, my = pygame.mouse.get_pos()
         level_pick = pygame.image.load('images/99px_ru_wallpaper_349262_mrachnij_temnij_les.jpg')
-        screen.blit(level_pick, (bg_x, -1150))
-        screen.blit(level_pick, (bg_x + 3840, -1150))
+        screen.blit(level_pick, (bg_x, -1050))
+        screen.blit(level_pick, (bg_x + 3840, -1050))
         keys = pygame.key.get_pressed()
 
         def player(arg):
@@ -61,13 +65,15 @@ def game():
         # =========================================================
 
         # Go left
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a] and bg_x < -20:
             if jump_count == 9:
                 player(player_go_left)
-            player_anim_count += 1
-            bg_x += character_speed
             if player_anim_count >= 5:
                 player_anim_count = 0
+            if bg_x >= 20:
+                character_speed = 0
+            player_anim_count += 1
+            bg_x += character_speed
 
         # Go right
         elif keys[pygame.K_d]:
@@ -79,10 +85,11 @@ def game():
             if player_anim_count >= 5:
                 player_anim_count = 0
 
-        elif not keys[pygame.K_SPACE] and is_jump == 9:
+        elif not keys[pygame.K_SPACE]:
             screen.blit(player_go_right[1], (character_x, character_y))
 
         # Jumping
+
         if not is_jump:
             if keys[pygame.K_SPACE]:
                 is_jump = True
