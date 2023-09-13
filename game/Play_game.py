@@ -10,14 +10,13 @@ def game():
 
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode((Settings.width_game, Settings.height_game), pygame.FULLSCREEN)
-    # Start coordinate
     bg_x = 0
 
     # Sounds
     pygame.mixer.music.load('sounds/music/kevin-macleod-ghost-story.ogg')
     pygame.mixer.music.play()
 
-    # player
+    # Animations
     # ============================================================================
 
     player_go_right = [pygame.image.load(f'images/Frames/main_chr/run1.png'),
@@ -49,7 +48,7 @@ def game():
 
     # ============================================================================
 
-    # cycle
+    # Cycle
     # ----------------------------------------------------------------------------------------------------
     while True:
         mx, my = pygame.mouse.get_pos()
@@ -128,6 +127,6 @@ def game():
 
         pygame.display.flip()
         pygame.display.update()
-        clock.tick(120)
+        clock.tick(60)
 
 # -----------------------------------------------------------------------------------------------------
