@@ -22,15 +22,20 @@ def pygame_init():
 def options(font, screen, clock):
     running = True
     draw_text('OPTIONS SCREEN', font, Settings.WHITE, screen, 20, 20)
+    draw_text('AUDIO', font, Settings.WHITE, screen, 270, 455)
+    draw_text('GRAPHICS', font, Settings.WHITE, screen, 250, 495)
+    draw_text('EXIT', font, Settings.WHITE, screen, 270, 535)
     while running:
         mx, my = pygame.mouse.get_pos()
         for event in pygame.event.get():
+
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
+
         pygame.display.update()
         clock.tick(60)
 
@@ -47,8 +52,8 @@ def main_menu():
     while True:
         background_menu_image = pygame.image.load('images/1024x768-553071-moon-backgrounds.jpg')
         screen.blit(background_menu_image, (0, 0))
-
         x += speed
+
         if x >= Settings.menu_width:
             speed = -speed
         screen.blit(animation_mist, (x, y))
