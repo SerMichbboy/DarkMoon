@@ -41,7 +41,7 @@ def game():
     player_jump_left = [pygame.image.load('images/Frames/main_chr_jump_left/jump1left.png'),
                         pygame.image.load('images/Frames/main_chr_jump_left/jump2left.png')]
 
-    character_speed, character_x, character_y = 15, 300, 600
+    character_speed, character_x, character_y = 40, 300, 600
     is_jump = False
     jump_count = 9
     player_anim_count = 0

@@ -1,5 +1,5 @@
 from settings import Settings
-from general import draw_text, are_you_sure
+from general import draw_text, are_you_sure, audio_set, graphics_set
 from Play_game import game
 import pygame
 import sys
@@ -21,21 +21,41 @@ def pygame_init():
 
 def options(font, screen, clock):
     running = True
+    click = False
     draw_text('OPTIONS SCREEN', font, Settings.WHITE, screen, 20, 20)
     draw_text('AUDIO', font, Settings.WHITE, screen, 270, 455)
     draw_text('GRAPHICS', font, Settings.WHITE, screen, 250, 495)
-    draw_text('EXIT', font, Settings.WHITE, screen, 270, 535)
+    audio_button = pygame.Rect(190, 450, 200, 30)
+    graphics_button = pygame.Rect(190, 490, 200, 30)
+
     while running:
         mx, my = pygame.mouse.get_pos()
-        for event in pygame.event.get():
 
+        if audio_button.collidepoint((mx, my)):
+            if click:
+                audio_set(font, screen, clock)
+
+        if graphics_button.collidepoint((mx, my)):
+            if click:
+                graphics_set(font, screen, clock)
+
+        click = False
+
+        for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
 
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    pygame.mixer.Sound('sounds/10e1076dfd6c701.ogg').play()
+                    click = True
+
+        pygame.display.flip()
         pygame.display.update()
         clock.tick(60)
 
@@ -57,7 +77,7 @@ def main_menu():
         if x >= Settings.menu_width:
             speed = -speed
         screen.blit(animation_mist, (x, y))
-        pygame.transform.scale(background_menu_image, (1024, 768))
+        pygame.transform.scale(background_menu_image, (Settings.menu_width, Settings.menu_height))
 
         mx, my = pygame.mouse.get_pos()
 
@@ -74,6 +94,7 @@ def main_menu():
         elif settings_button.collidepoint((mx, my)):
             if click:
                 options(font, screen, clock)
+
         elif exit_button.collidepoint((mx, my)):
             if click:
                 are_you_sure(screen, clock)
