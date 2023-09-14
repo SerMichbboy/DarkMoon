@@ -1,3 +1,4 @@
+import math
 import pygame
 from game.general import are_you_sure
 from settings import Settings
@@ -42,6 +43,13 @@ def game():
                         pygame.image.load('images/Frames/main_chr_jump_left/jump2left.png')]
 
     character_speed, character_x, character_y = 40, 300, 600
+
+    flashlight_image = pygame.image.load("images/Flashlight-Transparent.png")
+
+    # Положение фонарика в руке персонажа
+    flashlight_x = character_x + 10
+    flashlight_y = character_y
+
     is_jump = False
     jump_count = 9
     player_anim_count = 0
@@ -60,7 +68,8 @@ def game():
         def player(arg):
             return screen.blit(arg[player_anim_count], (character_x, character_y))
 
-        # Moving
+    # Moving
+
         # =========================================================
 
         # Go left
@@ -111,7 +120,15 @@ def game():
                 is_jump = False
                 jump_count = 9
 
-        # ==========================================================
+    # ==========================================================
+        angle = math.atan2(my - flashlight_y, mx - flashlight_x)
+
+        # Поворот фонарика на требуемый угол
+        flashlight_rotated = pygame.transform.rotate(flashlight_image, math.degrees(angle))
+        flashlight_rect = flashlight_rotated.get_rect(center=(flashlight_x + 500, flashlight_y))
+
+        # Отображение персонажа и фонарика на экране
+        screen.blit(flashlight_rotated, flashlight_rect.topleft)
 
         if bg_x <= -3840:
             bg_x = 0
