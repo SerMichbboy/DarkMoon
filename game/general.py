@@ -53,7 +53,6 @@ def are_you_sure(screen, clock, from_game=False):
 
 def audio_set(font, screen, clock):
 
-    click = False
     running = True
     pygame.init()
     pygame.mixer.init()
@@ -67,6 +66,7 @@ def audio_set(font, screen, clock):
         draw_text('AUDIO SETTINGS', font, Settings.WHITE, screen, 20, 20)
         draw_text('Music:', font, Settings.WHITE, screen, 250, 455)
         draw_text('Sounds:', font, Settings.WHITE, screen, 250, 495)
+        draw_text('<esc', font, Settings.WHITE, screen, 100, 700)
 
         mx, my = pygame.mouse.get_pos()
 
@@ -90,27 +90,18 @@ def audio_set(font, screen, clock):
 
 def graphics_set(font, screen, clock):
 
-    click = False
-    running = True
-    pygame.init()
-    pygame.mixer.init()
-    pygame.display.set_mode((Settings.menu_width, Settings.menu_height), pygame.NOFRAME)
-    exit_button = pygame.Rect(190, 530, 200, 30)
+    run = True
+    while run:
 
-    while running:
         background_menu_image = pygame.image.load('images/1024x768-553071-moon-backgrounds.jpg')
         screen.blit(background_menu_image, (0, 0))
 
         draw_text('GRAPHICS SETTINGS', font, Settings.WHITE, screen, 20, 20)
         draw_text('Screen:', font, Settings.WHITE, screen, 250, 455)
         draw_text('Details:', font, Settings.WHITE, screen, 250, 495)
-        draw_text('Back', font, Settings.WHITE, screen, 250, 535)
+        draw_text('<esc', font, Settings.WHITE, screen, 100, 700)
 
         mx, my = pygame.mouse.get_pos()
-
-        if exit_button.collidepoint((mx, my)):
-            if click:
-                are_you_sure(screen, clock)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -119,12 +110,12 @@ def graphics_set(font, screen, clock):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    running = False
+                    run = False
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     pygame.mixer.Sound('sounds/10e1076dfd6c701.ogg').play()
+                    click = True
 
-        pygame.display.flip()
         pygame.display.update()
         clock.tick(60)

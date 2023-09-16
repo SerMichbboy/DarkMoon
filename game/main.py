@@ -10,7 +10,7 @@ import sys
 def pygame_init():
     pygame.init()
     pygame.mixer.init()
-    screen = pygame.display.set_mode((Settings.menu_width, Settings.menu_height))
+    screen = pygame.display.set_mode((Settings.menu_width, Settings.menu_height), pygame.NOFRAME)
     pygame.display.set_caption("Dark Moon")
     clock = pygame.time.Clock()
     click = False

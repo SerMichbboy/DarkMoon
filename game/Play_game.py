@@ -17,6 +17,10 @@ def game():
     pygame.mixer.music.load('sounds/music/kevin-macleod-ghost-story.ogg')
     pygame.mixer.music.play()
 
+    # Flashlight
+    flashlight_image = pygame.image.load("images/Flashlight-Transparent.png")
+    flashlight_image.set_alpha(150)
+
     # Animations
     # ============================================================================
 
@@ -42,25 +46,22 @@ def game():
     player_jump_left = [pygame.image.load('images/Frames/main_chr_jump_left/jump1left.png'),
                         pygame.image.load('images/Frames/main_chr_jump_left/jump2left.png')]
 
-    character_speed, character_x, character_y = 40, 300, 600
-
-    flashlight_image = pygame.image.load("images/Flashlight-Transparent.png")
-
-    # Положение фонарика в руке персонажа
-    flashlight_x = character_x + 10
-    flashlight_y = character_y
+    character_speed, character_x, character_y = 25, 300, 600
 
     is_jump = False
     jump_count = 9
     player_anim_count = 0
 
+    flashlight_offset_x = -80  # Смещение фонарика относительно центра персонажа по оси X
+    flashlight_offset_y = -50  # Смещение фонарика относительно центра персонажа по оси Y
+
     # ============================================================================
+    # load background
+    level_pick = pygame.image.load('images/99px_ru_wallpaper_349262_mrachnij_temnij_les.jpg').convert()
 
     # Cycle
     # ----------------------------------------------------------------------------------------------------
     while True:
-        mx, my = pygame.mouse.get_pos()
-        level_pick = pygame.image.load('images/99px_ru_wallpaper_349262_mrachnij_temnij_les.jpg')
         screen.blit(level_pick, (bg_x, -1050))
         screen.blit(level_pick, (bg_x + 3840, -1050))
         keys = pygame.key.get_pressed()
@@ -68,8 +69,25 @@ def game():
         def player(arg):
             return screen.blit(arg[player_anim_count], (character_x, character_y))
 
-    # Moving
+        # Flashlight
+        # =========================================================
+        mouse_x, mouse_y = pygame.mouse.get_pos()
 
+        dx = mouse_x - (character_x + player_go_right[0].get_width() + flashlight_offset_x)
+        dy = mouse_y - (character_y + player_go_right[0].get_height() + flashlight_offset_y)
+        angle = math.degrees(math.atan2(dy, dx))
+
+        rotated_flashlight = pygame.transform.rotate(flashlight_image, -angle)
+        rotated_flashlight_rect = rotated_flashlight.get_rect()
+
+        flashlight_pos_x = character_x + player_go_right[
+            0].get_width() + flashlight_offset_x - rotated_flashlight_rect.width // 2
+        flashlight_pos_y = character_y + player_go_right[
+            0].get_height() + flashlight_offset_y - rotated_flashlight_rect.height // 2
+
+        screen.blit(rotated_flashlight, (flashlight_pos_x, flashlight_pos_y))
+
+        # Moving
         # =========================================================
 
         # Go left
@@ -120,15 +138,7 @@ def game():
                 is_jump = False
                 jump_count = 9
 
-    # ==========================================================
-        angle = math.atan2(my - flashlight_y, mx - flashlight_x)
-
-        # Поворот фонарика на требуемый угол
-        flashlight_rotated = pygame.transform.rotate(flashlight_image, math.degrees(angle))
-        flashlight_rect = flashlight_rotated.get_rect(center=(flashlight_x + 500, flashlight_y))
-
-        # Отображение персонажа и фонарика на экране
-        screen.blit(flashlight_rotated, flashlight_rect.topleft)
+        # ==========================================================
 
         if bg_x <= -3840:
             bg_x = 0
