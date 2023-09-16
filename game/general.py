@@ -52,12 +52,14 @@ def are_you_sure(screen, clock, from_game=False):
 
 
 def audio_set(font, screen, clock):
-
     running = True
-    pygame.init()
-    pygame.mixer.init()
 
-    pygame.display.set_mode((Settings.menu_width, Settings.menu_height), pygame.NOFRAME)
+    # Задание начальной позиции кружка
+    circle_radius, circle_x, circle_y = 8, 692, 464
+    circle_x_2, circle_y_2 = 692, 504
+
+    # Задание флага захвата кружка
+    circle_grabbed = False
 
     while running:
         background_menu_image = pygame.image.load('images/1024x768-553071-moon-backgrounds.jpg')
@@ -68,7 +70,16 @@ def audio_set(font, screen, clock):
         draw_text('Sounds:', font, Settings.WHITE, screen, 250, 495)
         draw_text('<esc', font, Settings.WHITE, screen, 100, 700)
 
-        mx, my = pygame.mouse.get_pos()
+        pygame.draw.rect(screen, (200, 200, 200), (400, 455, 300, 20))
+        pygame.draw.rect(screen, (200, 200, 200), (400, 495, 300, 20))
+
+        # Функция для проверки, находится ли точка внутри прямоугольника
+        def point_in_rect(x, y, rect_x, rect_y, rect_width, rect_height):
+            return rect_x <= x <= rect_x + rect_width and rect_y <= y <= rect_y + rect_height
+
+        # Отрисовка кружка
+        pygame.draw.circle(screen, (50, 50, 50), (circle_x, circle_y), circle_radius)
+        pygame.draw.circle(screen, (50, 50, 50), (circle_x_2, circle_y_2), circle_radius)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -83,14 +94,44 @@ def audio_set(font, screen, clock):
                 if event.button == 1:
                     pygame.mixer.Sound('sounds/10e1076dfd6c701.ogg').play()
 
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    # Проверка, находится ли курсор внутри кружка
+                    if point_in_rect(event.pos[0], event.pos[1], circle_x - circle_radius, circle_y - circle_radius,
+                                     circle_radius * 2, circle_radius * 2) or point_in_rect(event.pos[0], event.pos[1],
+                                                                                            circle_x_2 - circle_radius,
+                                                                                            circle_y_2 - circle_radius,
+                                                                                            circle_radius * 2,
+                                                                                            circle_radius * 2):
+                        circle_grabbed = True
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    circle_grabbed = False
+            elif event.type == pygame.MOUSEMOTION:
+                if circle_grabbed:
+                    # Обновление позиции кружка в соответствии с перемещением мыши
+                    new_circle_x = circle_x + event.rel[0]
+                    # Проверка, чтобы кружок не выходил за пределы внутреннего прямоугольника
+                    if 400 + circle_radius <= new_circle_x <= 400 + 300 - circle_radius:
+                        circle_x = new_circle_x
+                    elif 400 + circle_radius <= new_circle_x <= 400 + 300 - circle_radius:
+                        circle_x = new_circle_x
+                    # Обновление громкости звука на основе позиции кружка
+                    Settings.loudly = ((circle_x - 408) / 300)
+
         pygame.display.flip()
         pygame.display.update()
         clock.tick(60)
 
 
 def graphics_set(font, screen, clock):
-
     run = True
+    # Задание начальной позиции кружка
+    circle_radius, circle_x, circle_y = 8, 692, 464
+    # Задание флага захвата кружка
+    circle_grabbed = False
     while run:
 
         background_menu_image = pygame.image.load('images/1024x768-553071-moon-backgrounds.jpg')
@@ -101,7 +142,15 @@ def graphics_set(font, screen, clock):
         draw_text('Details:', font, Settings.WHITE, screen, 250, 495)
         draw_text('<esc', font, Settings.WHITE, screen, 100, 700)
 
-        mx, my = pygame.mouse.get_pos()
+        pygame.draw.rect(screen, (200, 200, 200), (400, 455, 300, 20))
+        pygame.draw.rect(screen, (200, 200, 200), (400, 495, 300, 20))
+
+        # Функция для проверки, находится ли точка внутри прямоугольника
+        def point_in_rect(x, y, rect_x, rect_y, rect_width, rect_height):
+            return rect_x <= x <= rect_x + rect_width and rect_y <= y <= rect_y + rect_height
+
+        # Отрисовка кружка
+        pygame.draw.circle(screen, (50, 50, 50), (circle_x, circle_y), circle_radius)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -115,7 +164,29 @@ def graphics_set(font, screen, clock):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     pygame.mixer.Sound('sounds/10e1076dfd6c701.ogg').play()
-                    click = True
+
+            if event.type == pygame.QUIT:
+                run = False
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+
+                    # Проверка, находится ли курсор внутри кружка
+                    if point_in_rect(event.pos[0], event.pos[1], circle_x - circle_radius, circle_y - circle_radius,
+                                     circle_radius * 2, circle_radius * 2):
+                        circle_grabbed = True
+
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    circle_grabbed = False
+
+            elif event.type == pygame.MOUSEMOTION:
+                if circle_grabbed:
+                    # Обновление позиции кружка в соответствии с перемещением мыши
+                    new_circle_x = circle_x + event.rel[0]
+                    # Проверка, чтобы кружок не выходил за пределы внутреннего прямоугольника
+                    if 400 + circle_radius <= new_circle_x <= 400 + 300 - circle_radius:
+                        circle_x = new_circle_x
 
         pygame.display.update()
         clock.tick(60)

@@ -10,6 +10,7 @@ class Settings:
     height_game: int = 1080
     text_size: int = 20
     text_style: str = 'Georgia'
+    loudly = 1
     FPS: int = 60
     WIDTH: int = 600
     HEIGHT: int = 600

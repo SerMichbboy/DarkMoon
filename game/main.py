@@ -62,8 +62,7 @@ def options(font, screen, clock):
 
 def main_menu():
     screen, clock, click, font = pygame_init()
-    pygame.mixer.music.load('sounds/a5bf579ed23da4d.ogg')
-    pygame.mixer.music.play()
+    pygame.mixer.Sound('sounds/a5bf579ed23da4d.ogg').play().set_volume(Settings.loudly)
     animation_mist = pygame.image.load('images/Frames/pngegg.png')
     animation_mist.set_alpha(75)
     animation_mist.get_rect()
