@@ -1,7 +1,7 @@
 import math
 import pygame
 from game.general import are_you_sure
-from settings import Settings
+from .settings import Settings
 
 
 def game():
