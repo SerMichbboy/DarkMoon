@@ -69,7 +69,11 @@ def options(font, screen, clock):
 def main_menu():
     """Функция для отображения главного меню."""
     screen, clock, font = pygame_init()
-    load_sound('sounds/a5bf579ed23da4d.ogg').play().set_volume(Settings.loudly)
+    
+    pygame.mixer.music.set_volume(Settings.loudly)
+    pygame.mixer.music.load('sounds/a5bf579ed23da4d.ogg')
+    pygame.mixer.music.play(-1)
+    
     animation_mist = load_image('images/Frames/pngegg.png')
     animation_mist.set_alpha(75)
     x, y, speed = -700, 230, 0.7
